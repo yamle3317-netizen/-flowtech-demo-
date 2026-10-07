@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlowTech Plumbing & Heating | UK's Trusted Engineers</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#eef8ff',
+                            100: '#d7effe',
+                            500: '#0284c7',
+                            600: '#0369a1',
+                            750: '#0c4a6e',
+                            900: '#082f49'
+                        },
+                        emergency: {
+                            DEFAULT: '#f97316',
+                            hover: '#ea580c',
+                            light: '#ffedd5'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Inter Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased selection:bg-brand-500 selection:text-white flex flex-col min-h-screen">
+
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <!-- Logo -->
+                <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('home')">
+                    <div class="w-12 h-12 bg-gradient-to-tr from-brand-600 to-cyan-500 rounded-xl flex items-center justify-center text-white shadow-md shadow-brand-500/20">
+                        <i data-lucide="wrench" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <span class="text-xl font-extrabold text-slate-900 tracking-tight">FlowTech</span>
+                        <span class="block text-xs font-semibold text-brand-600 tracking-wider uppercase">Plumbing & Heating</span>
+                    </div>
+                </div>
+
+                <!-- Desktop Navigation Links -->
+                <nav class="hidden md:flex items-center space-x-1 lg:space-x-2">
+                    <button onclick="switchTab('home')" class="nav-link px-4 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-brand-600 hover:bg-brand-50 transition" data-target="home">Home</button>
+                    <button onclick="switchTab('about')" class="nav-link px-4 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-brand-600 hover:bg-brand-50 transition" data-target="about">About Us</button>
+                    <button onclick="switchTab('services')" class="nav-link px-4 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-brand-600 hover:bg-brand-50 transition" data-target="services">Services</button>
+                    <button onclick="switchTab('reviews')" class="nav-link px-4 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-brand-600 hover:bg-brand-50 transition" data-target="reviews">Reviews</button>
+                    <button onclick="switchTab('contact')" class="nav-link px-4 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-brand-600 hover:bg-brand-50 transition" data-target="contact">Contact</button>
+                </nav>
+
+                <!-- Header Right: Phone & Emergency CTA -->
+                <div class="hidden lg:flex items-center space-x-4">
+                    <a href="tel:08001234567" class="flex items-center space-x-2 text-slate-700 hover:text-brand-600 font-semibold transition">
+                        <div class="w-10 h-10 rounded-full bg-brand-50 flex items-center justify-center text-brand-600">
+                            <i data-lucide="phone" class="w-5 h-5"></i>
+                        </div>
+                        <div class="text-left">
+                            <span class="block text-xs text-slate-400 font-normal">Free UK Helpline</span>
+                            <span class="text-sm font-bold">0800 123 4567</span>
+                        </div>
+                    </a>
+                    <button onclick="triggerEmergencyModal()" class="bg-emergency hover:bg-emergency-hover text-white px-4 py-2.5 rounded-xl font-bold text-sm shadow-md shadow-emergency/30 flex items-center space-x-2 transition transform active:scale-95">
+                        <i data-lucide="alert-triangle" class="w-4 h-4 animate-pulse"></i>
+                        <span>24/7 Emergency</span>
+                    </button>
+                </div>
+
+                <!-- Mobile menu button -->
+                <div class="flex md:hidden items-center space-x-3">
+                    <button onclick="triggerEmergencyModal()" class="bg-emergency text-white p-2.5 rounded-xl shadow-md">
+                        <i data-lucide="alert-triangle" class="w-5 h-5"></i>
+                    </button>
+                    <button id="mobile-menu-btn" onclick="toggleMobileMenu()" class="p-2 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition">
+                        <i data-lucide="menu" class="w-6 h-6"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Dropdown -->
+        <div id="mobile-menu" class="hidden md:hidden border-t border-slate-200 bg-white px-4 pt-3 pb-6 space-y-2 shadow-xl">
+            <button onclick="switchTab('home'); toggleMobileMenu();" class="block w-full text-left px-4 py-3 rounded-lg text-base font-medium text-slate-700 hover:bg-brand-50 hover:text-brand-600">Home</button>
+            <button onclick="switchTab('about'); toggleMobileMenu();" class="block w-full text-left px-4 py-3 rounded-lg text-base font-medium text-slate-700 hover:bg-brand-50 hover:text-brand-600">About Us</button>
+            <button onclick="switchTab('services'); toggleMobileMenu();" class="block w-full text-left px-4 py-3 rounded-lg text-base font-medium text-slate-700 hover:bg-brand-50 hover:text-brand-600">Services</button>
+            <button onclick="switchTab('reviews'); toggleMobileMenu();" class="block w-full text-left px-4 py-3 rounded-lg text-base font-medium text-slate-700 hover:bg-brand-50 hover:text-brand-600">Reviews</button>
+            <button onclick="switchTab('contact'); toggleMobileMenu();" class="block w-full text-left px-4 py-3 rounded-lg text-base font-medium text-slate-700 hover:bg-brand-50 hover:text-brand-600">Contact & Booking</button>
+            <div class="pt-2 border-t border-slate-100">
+                <a href="tel:08001234567" class="flex items-center justify-center space-x-2 w-full py-3 bg-brand-50 text-brand-700 rounded-xl font-bold">
+                    <i data-lucide="phone" class="w-5 h-5"></i>
+                    <span>Call 0800 123 4567</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow">
+
+        <!-- ================= PAGE 1: HOME ================= -->
+        <section id="home-tab" class="tab-content active">
+            <!-- Hero Section -->
+            <div class="relative bg-gradient-to-br from-slate-900 via-brand-900 to-brand-750 text-white overflow-hidden py-20 lg:py-28">
+                <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]"></div>
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                        <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+                            <div class="inline-flex items-center space-x-2 bg-brand-500/20 border border-brand-400/30 px-3.5 py-1.5 rounded-full text-brand-200 text-sm font-semibold">
+                                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                                <span>Gas Safe Registered Engineers (#948211)</span>
+                            </div>
+                            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight">
+                                Reliable Plumbing & Heating Engineers <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-brand-100">Across the UK</span>
+                            </h1>
+                            <p class="text-lg sm:text-xl text-slate-300 max-w-2xl mx-auto lg:mx-0">
+                                Fast response boiler repairs, expert installations, and emergency plumbing services available 24/7. Fully certified, guaranteed workmanship with transparent upfront pricing.
+                            </p>
+                            <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-4">
+                                <button onclick="switchTab('contact')" class="w-full sm:w-auto bg-brand-500 hover:bg-brand-600 text-white font-bold px-8 py-4 rounded-xl shadow-lg shadow-brand-500/30 transition transform hover:-translate-y-0.5 flex items-center justify-center space-x-2">
+                                    <i data-lucide="calendar" class="w-5 h-5"></i>
+                                    <span>Book a Service Now</span>
+                                </button>
+                                <button onclick="triggerEmergencyModal()" class="w-full sm:w-auto bg-emergency hover:bg-emergency-hover text-white font-bold px-8 py-4 rounded-xl shadow-lg shadow-emergency/30 transition transform hover:-translate-y-0.5 flex items-center justify-center space-x-2">
+                                    <i data-lucide="shield-alert" class="w-5 h-5"></i>
+                                    <span>24/7 Emergency Callout</span>
+                                </button>
+                            </div>
+                        </div>
+                        <!-- Hero Quick Quote Card -->
+                        <div class="lg:col-span-5">
+                            <div class="bg-white text-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl border border-slate-100">
+                                <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-6">
+                                    <div>
+                                        <h3 class="text-xl font-bold text-slate-900">Instant Estimate</h3>
+                                        <p class="text-xs text-slate-500">No hidden fees. Upfront UK pricing.</p>
+                                    </div>
+                                    <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded-full">Available Now</span>
+                                </div>
+                                <form onsubmit="handleQuickQuote(event)" class="space-y-4">
+                                    <div>
+                                        <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Select Service</label>
+                                        <select id="quick-service" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-brand-500">
+                                            <option>Boiler Installation & Servicing</option>
+                                            <option>Emergency Leak Repair</option>
+                                            <option>Central Heating Maintenance</option>
+                                            <option>Drain Unblocking</option>
+                                            <option>Bathroom Fitting</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">UK Postcode</label>
+                                        <input type="text" id="quick-postcode" placeholder="e.g. M1 1AE or SW1A 1AA" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-brand-500 uppercase">
+                                    </div>
+                                    <button type="submit" class="w-full bg-slate-900 hover:bg-brand-600 text-white font-bold py-3.5 rounded-xl transition shadow-md flex items-center justify-center space-x-2">
+                                        <span>Check Engineer Availability</span>
+                                        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                                    </button>
+                                </form>
+                                <div id="quick-quote-result" class="mt-4 hidden p-3 bg-emerald-50 text-emerald-800 text-xs rounded-xl font-medium border border-emerald-200">
+                                    ✓ Engineers active in your area! Response time approx. 45 mins.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Trust Badges Bar -->
+            <div class="bg-white border-b border-slate-200 py-8">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+                        <div class="flex flex-col items-center p-4 rounded-2xl bg-slate-50 border border-slate-100">
+                            <div class="w-12 h-12 rounded-full bg-brand-50 text-brand-600 flex items-center justify-center mb-3">
+                                <i data-lucide="shield-check" class="w-6 h-6"></i>
+                            </div>
+                            <h4 class="font-bold text-slate-900 text-sm">Gas Safe Registered</h4>
+                            <p class="text-xs text-slate-500 mt-1">Reg No. 948211</p>
+                        </div>
+                        <div class="flex flex-col items-center p-4 rounded-2xl bg-slate-50 border border-slate-100">
+                            <div class="w-12 h-12 rounded-full bg-brand-50 text-brand-600 flex items-center justify-center mb-3">
+                                <i data-lucide="clock" class="w-6 h-6"></i>
+                            </div>
+                            <h4 class="font-bold text-slate-900 text-sm">24/7 Emergency</h4>
+                            <p class="text-xs text-slate-500 mt-1">Rapid 45-min callout</p>
+                        </div>
+                        <div class="flex flex-col items-center p-4 rounded-2xl bg-slate-50 border border-slate-100">
+                            <div class="w-12 h-12 rounded-full bg-brand-50 text-brand-600 flex items-center justify-center mb-3">
+                                <i data-lucide="award" class="w-6 h-6"></i>
+                            </div>
+                            <h4 class="font-bold text-slate-900 text-sm">10-Year Warranty</h4>
+                            <p class="text-xs text-slate-500 mt-1">On selected boilers</p>
+                        </div>
+                        <div class="flex flex-col items-center p-4 rounded-2xl bg-slate-50 border border-slate-100">
+                            <div class="w-12 h-12 rounded-full bg-brand-50 text-brand-600 flex items-center justify-center mb-3">
+                                <i data-lucide="star" class="w-6 h-6 fill-amber-400 text-amber-400"></i>
+                            </div>
+                            <h4 class="font-bold text-slate-900 text-sm">5-Star Rated</h4>
+                            <p class="text-xs text-slate-500 mt-1">1,250+ UK Reviews</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Core Offerings Preview -->
+            <div class="py-20 bg-slate-50">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="text-center max-w-3xl mx-auto mb-16">
+                        <span class="text-brand-600 font-bold uppercase tracking-widest text-xs">Our Expertise</span>
+                        <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 mt-2">Comprehensive Plumbing & Heating Solutions</h2>
+                        <p class="text-slate-600 mt-3">From leaky taps to full central heating installations, our certified UK engineers handle every job with precision and care.</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-200 hover:shadow-md transition">
+                            <div class="w-14 h-14 bg-brand-50 text-brand-600 rounded-2xl flex items-center justify-center mb-6">
+                                <i data-lucide="flame" class="w-7 h-7"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-900 mb-3">Boiler Installation & Servicing</h3>
+                            <p class="text-slate-600 text-sm mb-6">A-rated energy efficient boiler replacements with up to 10 years manufacturer warranty and annual maintenance plans.</p>
+                            <button onclick="selectServiceAndRedirect('Boiler Installation & Servicing')" class="inline-flex items-center text-brand-600 font-bold text-sm hover:text-brand-700">
+                                <span>Book Service</span>
+                                <i data-lucide="chevron-right" class="w-4 h-4 ml-1"></i>
+                            </button>
+                        </div>
+                        <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-200 hover:shadow-md transition">
+                            <div class="w-14 h-14 bg-brand-50 text-brand-600 rounded-2xl flex items-center justify-center mb-6">
+                                <i data-lucide="droplet" class="w-7 h-7"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-900 mb-3">Emergency Leak Repairs</h3>
+                            <p class="text-slate-600 text-sm mb-6">Burst pipes, severe leaks, or overflowing tanks fixed swiftly by our emergency response engineers any time of day or night.</p>
+                            <button onclick="selectServiceAndRedirect('Emergency Leak Repairs')" class="inline-flex items-center text-brand-600 font-bold text-sm hover:text-brand-700">
+                                <span>Book Service</span>
+                                <i data-lucide="chevron-right" class="w-4 h-4 ml-1"></i>
+                            </button>
+                        </div>
+                        <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-200 hover:shadow-md transition">
+                            <div class="w-14 h-14 bg-brand-50 text-brand-600 rounded-2xl flex items-center justify-center mb-6">
+                                <i data-lucide="activity" class="w-7 h-7"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-900 mb-3">Central Heating Maintenance</h3>
+                            <p class="text-slate-600 text-sm mb-6">Power flushing, radiator bleeding, and thermostat tuning to keep your home warm and heating bills low all year round.</p>
+                            <button onclick="selectServiceAndRedirect('Central Heating Maintenance')" class="inline-flex items-center text-brand-600 font-bold text-sm hover:text-brand-700">
+                                <span>Book Service</span>
+                                <i data-lucide="chevron-right" class="w-4 h-4 ml-1"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-12">
+                        <button onclick="switchTab('services')" class="bg-slate-900 hover:bg-brand-600 text-white font-bold px-8 py-3.5 rounded-xl transition inline-flex items-center space-x-2">
+                            <span>View All 6 Core Services</span>
+                            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= PAGE 2: ABOUT US ================= -->
+        <section id="about-tab" class="tab-content py-20 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <!-- Header Banner -->
+                <div class="text-center max-w-3xl mx-auto mb-16">
+                    <span class="text-brand-600 font-bold uppercase tracking-widest text-xs">About FlowTech</span>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 mt-2">UK's Most Trusted Heating & Plumbing Experts</h2>
+                    <p class="text-slate-600 mt-3">Founded with a commitment to integrity, transparency, and top-tier workmanship across Manchester, London, Birmingham and beyond.</p>
+                </div>
+
+                <!-- Company Story -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-20">
+                    <div class="space-y-6">
+                        <div class="inline-flex items-center space-x-2 bg-brand-50 text-brand-700 px-3.5 py-1.5 rounded-full text-xs font-bold">
+                            <i data-lucide="calendar" class="w-4 h-4"></i>
+                            <span>Over 15 Years of Excellence</span>
+                        </div>
+                        <h3 class="text-2xl sm:text-3xl font-bold text-slate-900">Built on Trust, Punctuality, & Uncompromising Quality</h3>
+                        <p class="text-slate-600 leading-relaxed">
+                            FlowTech Plumbing & Heating was established in Manchester over 15 years ago by master engineers who recognized a gap in the market for honest, upfront plumbing services. Today, we operate a nationwide network of fully qualified Gas Safe and CIPHE-certified professionals.
+                        </p>
+                        <p class="text-slate-600 leading-relaxed">
+                            Whether you need a midnight boiler repair or a comprehensive luxury bathroom renovation, our team treats every home with the utmost respect—arriving on time, wearing shoe covers, and leaving your property immaculate.
+                        </p>
+                        <div class="grid grid-cols-2 gap-6 pt-4">
+                            <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                                <span class="block text-3xl font-extrabold text-brand-600">15,000+</span>
+                                <span class="text-xs text-slate-500 font-medium">Completed Projects</span>
+                            </div>
+                            <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                                <span class="block text-3xl font-extrabold text-brand-600">100%</span>
+                                <span class="text-xs text-slate-500 font-medium">Gas Safe Compliant</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="relative">
+                        <div class="bg-gradient-to-tr from-brand-600 to-cyan-500 rounded-3xl p-2 shadow-2xl">
+                            <div class="bg-slate-900 rounded-2xl p-8 text-white space-y-6">
+                                <h4 class="text-xl font-bold text-white flex items-center space-x-2">
+                                    <i data-lucide="shield-check" class="w-6 h-6 text-cyan-400"></i>
+                                    <span>Our Core Guarantees</span>
+                                </h4>
+                                <ul class="space-y-4 text-sm text-slate-300">
+                                    <li class="flex items-start space-x-3">
+                                        <i data-lucide="check-circle" class="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5"></i>
+                                        <div><strong class="text-white">Upfront Fixed Pricing:</strong> No hidden callout charges or surprises on your invoice.</div>
+                                    </li>
+                                    <li class="flex items-start space-x-3">
+                                        <i data-lucide="check-circle" class="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5"></i>
+                                        <div><strong class="text-white">Guaranteed Workmanship:</strong> 12-month workmanship guarantee on all repairs.</div>
+                                    </li>
+                                    <li class="flex items-start space-x-3">
+                                        <i data-lucide="check-circle" class="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5"></i>
+                                        <div><strong class="text-white">Fully Certified Engineers:</strong> Gas Safe registered and DBS checked for your complete peace of mind.</div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Accreditations & Badges -->
+                <div class="bg-slate-50 rounded-3xl p-8 sm:p-12 border border-slate-200 text-center">
+                    <h3 class="text-xl font-bold text-slate-900 mb-8">Certified & Accredited by Industry Standards</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-6 items-center justify-center">
+                        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col items-center">
+                            <span class="font-extrabold text-lg text-slate-900">GAS SAFE</span>
+                            <span class="text-xs text-brand-600 font-bold mt-1">Register #948211</span>
+                        </div>
+                        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col items-center">
+                            <span class="font-extrabold text-lg text-slate-900">CIPHE</span>
+                            <span class="text-xs text-brand-600 font-bold mt-1">Master Plumber Member</span>
+                        </div>
+                        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col items-center">
+                            <span class="font-extrabold text-lg text-slate-900">TRUSTPILOT</span>
+                            <span class="text-xs text-amber-500 font-bold mt-1">★ 4.9 / 5.0 Rating</span>
+                        </div>
+                        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col items-center">
+                            <span class="font-extrabold text-lg text-slate-900">CHECKATRADE</span>
+                            <span class="text-xs text-emerald-600 font-bold mt-1">100% Vetted & Approved</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= PAGE 3: SERVICES ================= -->
+        <section id="services-tab" class="tab-content py-20 bg-slate-50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-3xl mx-auto mb-16">
+                    <span class="text-brand-600 font-bold uppercase tracking-widest text-xs">Our Services</span>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 mt-2">Professional Plumbing & Heating Services</h2>
+                    <p class="text-slate-600 mt-3">Transparent pricing, expert engineers, and rapid dispatch across the UK. Choose a service below to book instantly.</p>
+                </div>
+
+                <!-- Services Grid (6 services) -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Service 1 -->
+                    <div class="bg-white rounded-3xl p-8 border border-slate-200 shadow-sm hover:shadow-md transition flex flex-col justify-between">
+                        <div>
+                            <div class="w-14 h-14 bg-brand-50 text-brand-600 rounded-2xl flex items-center justify-center mb-6">
+                                <i data-lucide="flame" class="w-7 h-7"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-900 mb-2">Boiler Installation & Servicing</h3>
+                            <p class="text-slate-600 text-sm mb-6">High efficiency boiler upgrades, annual safety checks, and fault diagnosis by certified Gas Safe specialists.</p>
+                        </div>
+                        <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
+                            <span class="text-xs font-bold text-slate-500">From £89 service</span>
+                            <button onclick="selectServiceAndRedirect('Boiler Installation & Servicing')" class="bg-brand-50 hover:bg-brand-600 hover:text-white text-brand-700 px-4 py-2 rounded-xl text-xs font-bold transition">
+                                Book This
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Service 2 -->
+                    <div class="bg-white rounded-3xl p-8 border border-slate-200 shadow-sm hover:shadow-md transition flex flex-col justify-between">
+                        <div>
+                            <div class="w-14 h-14 bg-brand-50 text-brand-600 rounded-2xl flex items-center justify-center mb-6">
+                                <i data-lucide="droplet" class="w-7 h-7"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-900 mb-2">Emergency Leak Repairs</h3>
+                            <p class="text-slate-600 text-sm mb-6">Immediate dispatch for burst pipes, flooding, dripping taps, and concealed water leaks with minimal disruption.</p>
+                        </div>
+                        <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
+                            <span class="text-xs font-bold text-slate-500">24/7 Rapid Dispatch</span>
+                            <button onclick="selectServiceAndRedirect('Emergency Leak Repairs')" class="bg-brand-50 hover:bg-brand-600 hover:text-white text-brand-700 px-4 py-2 rounded-xl text-xs font-bold transition">
+                                Book This
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Service 3 -->
+                    <div class="bg-white rounded-3xl p-8 border border-slate-200 shadow-sm hover:shadow-md transition flex flex-col justify-between">
+                        <div>
+                            <div class="w-14 h-14 bg-brand-50 text-brand-600 rounded-2xl flex items-center justify-center mb-6">
+                                <i data-lucide="activity" class="w-7 h-7"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-900 mb-2">Central Heating Maintenance</h3>
+                            <p class="text-slate-600 text-sm mb-6">Power flushing, radiator balancing, pump repairs, and full system tune-ups to maximize warmth and reduce energy bills.</p>
+                        </div>
+                        <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
+                            <span class="text-xs font-bold text-slate-500">From £120</span>
+                            <button onclick="selectServiceAndRedirect('Central Heating Maintenance')" class="bg-brand-50 hover:bg-brand-600 hover:text-white text-brand-700 px-4 py-2 rounded-xl text-xs font-bold transition">
+                                Book This
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Service 4 -->
+                    <div class="bg-white rounded-3xl p-8 border border-slate-200 shadow-sm hover:shadow-md transition flex flex-col justify-between">
+                        <div>
+                            <div class="w-14 h-14 bg-brand-50 text-brand-600 rounded-2xl flex items-center justify-center mb-6">
+                                <i data-lucide="home" class="w-7 h-7"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-900 mb-2">Bathroom Fitting</h3>
+                            <p class="text-slate-600 text-sm mb-6">Complete luxury bathroom design and installation including tiling, sanitary ware plumbing, shower enclosures, and waterproofing.</p>
+                        </div>
+                        <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
+                            <span class="text-xs font-bold text-slate-500">Free Quotations</span>
+                            <button onclick="selectServiceAndRedirect('Bathroom Fitting')" class="bg-brand-50 hover:bg-brand-600 hover:text-white text-brand-700 px-4 py-2 rounded-xl text-xs font-bold transition">
+                                Book This
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Service 5 -->
+                    <div class="bg-white rounded-3xl p-8 border border-slate-200 shadow-sm hover:shadow-md transition flex flex-col justify-between">
+                        <div>
+                            <div class="w-14 h-14 bg-brand-50 text-brand-600 rounded-2xl flex items-center justify-center mb-6">
+                                <i data-lucide="layers" class="w-7 h-7"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-900 mb-2">Drain Unblocking</h3>
+                            <p class="text-slate-600 text-sm mb-6">High-pressure water jetting, CCTV drain surveys, and mechanical root removal for blocked sinks, toilets, and external drains.</p>
+                        </div>
+                        <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
+                            <span class="text-xs font-bold text-slate-500">Fixed Rate Clearances</span>
+                            <button onclick="selectServiceAndRedirect('Drain Unblocking')" class="bg-brand-50 hover:bg-brand-600 hover:text-white text-brand-700 px-4 py-2 rounded-xl text-xs font-bold transition">
+                                Book This
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Service 6 -->
+                    <div class="bg-white rounded-3xl p-8 border border-slate-200 shadow-sm hover:shadow-md transition flex flex-col justify-between">
+                        <div>
+                            <div class="w-14 h-14 bg-brand-50 text-brand-600 rounded-2xl flex items-center justify-center mb-6">
+                                <i data-lucide="cpu" class="w-7 h-7"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-900 mb-2">Smart Thermostat Setup</h3>
+                            <p class="text-slate-600 text-sm mb-6">Professional installation of Nest, Hive, and Tado smart heating controls for ultimate mobile app temperature scheduling.</p>
+                        </div>
+                        <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
+                            <span class="text-xs font-bold text-slate-500">Same-day Setup</span>
+                            <button onclick="selectServiceAndRedirect('Smart Thermostat Setup')" class="bg-brand-50 hover:bg-brand-600 hover:text-white text-brand-700 px-4 py-2 rounded-xl text-xs font-bold transition">
+                                Book This
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= PAGE 4: REVIEWS ================= -->
+        <section id="reviews-tab" class="tab-content py-20 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <!-- Trustpilot Score Header -->
+                <div class="bg-slate-900 text-white rounded-3xl p-8 sm:p-12 mb-16 flex flex-col lg:flex-row items-center justify-between shadow-xl">
+                    <div class="space-y-3 text-center lg:text-left mb-6 lg:mb-0">
+                        <div class="inline-flex items-center space-x-2 bg-emerald-500/20 text-emerald-400 px-3.5 py-1.5 rounded-full text-xs font-bold">
+                            <i data-lucide="star" class="w-4 h-4 fill-emerald-400"></i>
+                            <span>Verified Trustpilot & Google Score</span>
+                        </div>
+                        <h2 class="text-3xl sm:text-4xl font-extrabold">Rated 4.9 / 5.0 from 1,250+ UK Customers</h2>
+                        <p class="text-slate-300 text-sm max-w-xl">We pride ourselves on punctuality, pristine clean-ups, and transparent pricing across England, Scotland, and Wales.</p>
+                    </div>
+                    <div class="flex flex-col items-center bg-white/10 p-6 rounded-2xl backdrop-blur-sm border border-white/10">
+                        <div class="flex space-x-1 mb-2">
+                            <i data-lucide="star" class="w-6 h-6 fill-amber-400 text-amber-400"></i>
+                            <i data-lucide="star" class="w-6 h-6 fill-amber-400 text-amber-400"></i>
+                            <i data-lucide="star" class="w-6 h-6 fill-amber-400 text-amber-400"></i>
+                            <i data-lucide="star" class="w-6 h-6 fill-amber-400 text-amber-400"></i>
+                            <i data-lucide="star" class="w-6 h-6 fill-amber-400 text-amber-400"></i>
+                        </div>
+                        <span class="text-xl font-bold">Trustpilot Excellent</span>
+                        <span class="text-xs text-slate-400 mt-1">Based on 1,250 verified reviews</span>
+                    </div>
+                </div>
+
+                <!-- Testimonials Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Review 1 -->
+                    <div class="bg-slate-50 p-8 rounded-3xl border border-slate-200 flex flex-col justify-between">
+                        <div class="space-y-4">
+                            <div class="flex text-amber-400 space-x-1">
+                                <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
+                                <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
+                                <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
+                                <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
+                                <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
+                            </div>
+                            <p class="text-slate-700 text-sm italic">"Our boiler broke down on a freezing Sunday morning in Manchester. FlowTech sent an engineer out within 40 minutes. Fixed the diverter valve quickly and left the area spotless. Absolute lifesavers!"</p>
+                        </div>
+                        <div class="pt-6 mt-6 border-t border-slate-200 flex items-center justify-between">
+                            <div>
+                                <h4 class="font-bold text-slate-900 text-sm">Arthur Pendelton</h4>
+                                <p class="text-xs text-slate-500">Manchester, M20</p>
+                            </div>
+                            <span class="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2.5 py-1 rounded-full">Verified Customer</span>
+                        </div>
+                    </div>
+
+                    <!-- Review 2 -->
+                    <div class="bg-slate-50 p-8 rounded-3xl border border-slate-200 flex flex-col justify-between">
+                        <div class="space-y-4">
+                            <div class="flex text-amber-400 space-x-1">
+                                <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
+                                <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
+                                <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
+                                <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
+                                <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
+                            </div>
+                            <p class="text-slate-700 text-sm italic">"Had a complete bathroom refit done in Birmingham. The quote was completely transparent with no hidden add-ons. The tiling and plumbing finish is exceptional. Highly recommend!"</p>
+                        </div>
+                        <div class="pt-6 mt-6 border-t border-slate-200 flex items-center justify-between">
+                            <div>
+                                <h4 class="font-bold text-slate-900 text-sm">Siobhan Davies</h4>
+                                <p class="text-xs text-slate-500">Birmingham, B15</p>
+                            </div>
+                            <span class="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2.5 py-1 rounded-full">Verified Customer</span>
+                        </div>
+                    </div>
+
+                    <!-- Review 3 -->
+                    <div class="bg-slate-50 p-8 rounded-3xl border border-slate-200 flex flex-col justify-between">
+                        <div class="space-y-4">
+                            <div class="flex text-amber-400 space-x-1">
+                                <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
+                                <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
+                                <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
+                                <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
+                                <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
+                            </div>
+                            <p class="text-slate-700 text-sm italic">"Professional, courteous, and punctual. Installed a new Hive smart thermostat and balanced our radiators. Heating bills have already gone down. Brilliant service from start to finish."</p>
+                        </div>
+                        <div class="pt-6 mt-6 border-t border-slate-200 flex items-center justify-between">
+                            <div>
+                                <h4 class="font-bold text-slate-900 text-sm">Oliver Sterling</h4>
+                                <p class="text-xs text-slate-500">London, SW1A</p>
+                            </div>
+                            <span class="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2.5 py-1 rounded-full">Verified Customer</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= PAGE 5: CONTACT & BOOKING ================= -->
+        <section id="contact-tab" class="tab-content py-20 bg-slate-50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-3xl mx-auto mb-16">
+                    <span class="text-brand-600 font-bold uppercase tracking-widest text-xs">Get in Touch</span>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 mt-2">Book an Engineer or Request a Free Quote</h2>
+                    <p class="text-slate-600 mt-3">Fill out the form below or call our 24/7 UK helpline. We respond to all bookings within 15 minutes.</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+                    <!-- Booking Form -->
+                    <div class="lg:col-span-7 bg-white p-8 sm:p-10 rounded-3xl shadow-sm border border-slate-200">
+                        <form id="booking-form" onsubmit="handleBookingSubmission(event)" class="space-y-6">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 uppercase mb-2">Full Name *</label>
+                                    <input type="text" id="booking-name" placeholder="John Smith" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-brand-500">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 uppercase mb-2">Phone Number *</label>
+                                    <input type="tel" id="booking-phone" placeholder="07123 456789" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-brand-500">
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 uppercase mb-2">Email Address *</label>
+                                    <input type="email" id="booking-email" placeholder="john@example.co.uk" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-brand-500">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 uppercase mb-2">UK Postcode *</label>
+                                    <input type="text" id="booking-postcode" placeholder="e.g. M1 1AE" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-brand-500 uppercase">
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 uppercase mb-2">Select Service *</label>
+                                    <select id="booking-service" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-brand-500">
+                                        <option>Boiler Installation & Servicing</option>
+                                        <option>Emergency Leak Repairs</option>
+                                        <option>Central Heating Maintenance</option>
+                                        <option>Bathroom Fitting</option>
+                                        <option>Drain Unblocking</option>
+                                        <option>Smart Thermostat Setup</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 uppercase mb-2">Preferred Date</label>
+                                    <input type="date" id="booking-date" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-brand-500">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 uppercase mb-2">Problem Description / Details</label>
+                                <textarea rows="4" id="booking-msg" placeholder="Describe your plumbing or heating issue..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-brand-500"></textarea>
+                            </div>
+                            <button type="submit" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-brand-500/30 transition flex items-center justify-center space-x-2">
+                                <i data-lucide="send" class="w-5 h-5"></i>
+                                <span>Confirm Booking Request</span>
+                            </button>
+                        </form>
+                        <!-- Success Message Box -->
+                        <div id="booking-success" class="hidden mt-6 p-6 bg-emerald-50 border border-emerald-200 rounded-2xl text-center space-y-3">
+                            <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto">
+                                <i data-lucide="check" class="w-6 h-6"></i>
+                            </div>
+                            <h4 class="text-lg font-bold text-emerald-900">Booking Confirmed Successfully!</h4>
+                            <p class="text-emerald-700 text-sm">Thank you! Our dispatch desk has received your request and will call you within 15 minutes to confirm your engineer time slot.</p>
+                        </div>
+                    </div>
+
+                    <!-- Contact Details & Map Placeholder -->
+                    <div class="lg:col-span-5 space-y-6">
+                        <div class="bg-slate-900 text-white p-8 rounded-3xl shadow-xl space-y-6">
+                            <h3 class="text-xl font-bold border-b border-white/10 pb-4">Direct Contact & Info</h3>
+                            <div class="space-y-4 text-sm">
+                                <div class="flex items-start space-x-4">
+                                    <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center flex-shrink-0 text-cyan-400">
+                                        <i data-lucide="phone" class="w-5 h-5"></i>
+                                    </div>
+                                    <div>
+                                        <span class="block text-xs text-slate-400">Free UK Helpline</span>
+                                        <a href="tel:08001234567" class="font-bold text-base hover:text-cyan-400">0800 123 4567</a>
+                                    </div>
+                                </div>
+                                <div class="flex items-start space-x-4">
+                                    <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center flex-shrink-0 text-cyan-400">
+                                        <i data-lucide="mail" class="w-5 h-5"></i>
+                                    </div>
+                                    <div>
+                                        <span class="block text-xs text-slate-400">Email Support</span>
+                                        <a href="mailto:info@flowtechplumbing.co.uk" class="font-bold text-base hover:text-cyan-400">info@flowtechplumbing.co.uk</a>
+                                    </div>
+                                </div>
+                                <div class="flex items-start space-x-4">
+                                    <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center flex-shrink-0 text-cyan-400">
+                                        <i data-lucide="clock" class="w-5 h-5"></i>
+                                    </div>
+                                    <div>
+                                        <span class="block text-xs text-slate-400">Operating Hours</span>
+                                        <span class="font-bold text-base">24/7 Emergency Callout</span>
+                                        <span class="block text-xs text-slate-300">Office Desk: Mon-Sun 8:00 AM - 6:00 PM</span>
+                                    </div>
+                                </div>
+                                <div class="flex items-start space-x-4">
+                                    <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center flex-shrink-0 text-cyan-400">
+                                        <i data-lucide="map-pin" class="w-5 h-5"></i>
+                                    </div>
+                                    <div>
+                                        <span class="block text-xs text-slate-400">Headquarters</span>
+                                        <span class="font-bold text-base">FlowTech House, 42 King Street, Manchester, M2 6AZ</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Coverage Map Placeholder -->
+                        <div class="bg-white p-6 rounded-3xl border border-slate-200 text-center space-y-3">
+                            <div class="h-40 bg-slate-100 rounded-2xl flex flex-col items-center justify-center text-slate-400 border border-slate-200">
+                                <i data-lucide="map" class="w-10 h-10 mb-2 text-brand-500"></i>
+                                <span class="text-sm font-semibold text-slate-700">Nationwide UK Coverage</span>
+                                <span class="text-xs text-slate-500">England, Scotland & Wales Engineers</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-slate-900 text-white border-t border-slate-800 pt-16 pb-12 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 pb-12 border-b border-slate-800">
+                <div class="space-y-4 md:col-span-1">
+                    <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('home')">
+                        <div class="w-10 h-10 bg-brand-600 rounded-xl flex items-center justify-center text-white">
+                            <i data-lucide="wrench" class="w-5 h-5"></i>
+                        </div>
+                        <span class="text-lg font-extrabold text-white">FlowTech</span>
+                    </div>
+                    <p class="text-slate-400 text-xs leading-relaxed">
+                        The UK's trusted partner for emergency plumbing, boiler installations, and central heating maintenance. Gas Safe Registered (#948211).
+                    </p>
+                </div>
+                <div>
+                    <h4 class="text-sm font-bold text-white uppercase tracking-wider mb-4">Quick Links</h4>
+                    <ul class="space-y-2 text-sm text-slate-400">
+                        <li><button onclick="switchTab('home')" class="hover:text-white transition">Home</button></li>
+                        <li><button onclick="switchTab('about')" class="hover:text-white transition">About Us</button></li>
+                        <li><button onclick="switchTab('services')" class="hover:text-white transition">Services</button></li>
+                        <li><button onclick="switchTab('reviews')" class="hover:text-white transition">Reviews</button></li>
+                        <li><button onclick="switchTab('contact')" class="hover:text-white transition">Contact & Booking</button></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-sm font-bold text-white uppercase tracking-wider mb-4">Core Services</h4>
+                    <ul class="space-y-2 text-sm text-slate-400">
+                        <li><span class="hover:text-white cursor-pointer" onclick="switchTab('services')">Boiler Installations</span></li>
+                        <li><span class="hover:text-white cursor-pointer" onclick="switchTab('services')">Emergency Leak Repairs</span></li>
+                        <li><span class="hover:text-white cursor-pointer" onclick="switchTab('services')">Central Heating</span></li>
+                        <li><span class="hover:text-white cursor-pointer" onclick="switchTab('services')">Bathroom Fitting</span></li>
+                        <li><span class="hover:text-white cursor-pointer" onclick="switchTab('services')">Drain Unblocking</span></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-sm font-bold text-white uppercase tracking-wider mb-4">Emergency Support</h4>
+                    <p class="text-xs text-slate-400 mb-4">Need an emergency engineer right now? Our lines are open 24/7.</p>
+                    <a href="tel:08001234567" class="inline-flex items-center space-x-2 bg-emergency hover:bg-emergency-hover text-white px-4 py-2.5 rounded-xl text-sm font-bold shadow-md transition">
+                        <i data-lucide="phone" class="w-4 h-4"></i>
+                        <span>0800 123 4567</span>
+                    </a>
+                </div>
+            </div>
+            <div class="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500">
+                <p>&copy; 2026 FlowTech Plumbing & Heating Ltd. All rights reserved. Gas Safe Reg #948211.</p>
+                <div class="flex space-x-6 mt-4 sm:mt-0">
+                    <a href="#" class="hover:text-slate-400 transition">Privacy Policy</a>
+                    <a href="#" class="hover:text-slate-400 transition">Terms of Service</a>
+                    <a href="#" class="hover:text-slate-400 transition">Gas Safe Disclaimer</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Emergency Modal -->
+    <div id="emergency-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 text-center space-y-6 shadow-2xl relative border-2 border-emergency">
+            <button onclick="closeEmergencyModal()" class="absolute top-4 right-4 p-2 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 transition">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            <div class="w-16 h-16 bg-emergency-light text-emergency rounded-full flex items-center justify-center mx-auto shadow-inner">
+                <i data-lucide="alert-triangle" class="w-8 h-8 animate-bounce"></i>
+            </div>
+            <div class="space-y-2">
+                <h3 class="text-2xl font-extrabold text-slate-900">24/7 Emergency Dispatch</h3>
+                <p class="text-sm text-slate-600">Experiencing a burst pipe, severe leak, or total boiler failure? Call our emergency hotline immediately for a rapid 45-minute engineer dispatch.</p>
+            </div>
+            <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200">
+                <span class="block text-xs font-bold text-slate-400 uppercase">Immediate UK Helpline</span>
+                <a href="tel:08001234567" class="text-2xl font-extrabold text-emergency hover:underline">0800 123 4567</a>
+            </div>
+            <button onclick="closeEmergencyModal(); switchTab('contact');" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3.5 rounded-xl transition">
+                Or Book Online Now
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Tab Switching Logic
+        function switchTab(tabId) {
+            // Hide all tab contents
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
+
+            // Show target tab
+            const target = document.getElementById(tabId + '-tab');
+            if (target) {
+                target.classList.add('active');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+
+            // Update desktop nav styling
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                if (link.getAttribute('data-target') === tabId) {
+                    link.classList.add('text-brand-600', 'bg-brand-50');
+                } else {
+                    link.classList.remove('text-brand-600', 'bg-brand-50');
+                }
+            });
+        }
+
+        // Mobile Menu Toggle
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        // Emergency Modal Controllers
+        function triggerEmergencyModal() {
+            const modal = document.getElementById('emergency-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeEmergencyModal() {
+            const modal = document.getElementById('emergency-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        // Quick Quote Handler
+        function handleQuickQuote(e) {
+            e.preventDefault();
+            const postcode = document.getElementById('quick-postcode').value;
+            const resultBox = document.getElementById('quick-quote-result');
+            if (postcode.trim() !== '') {
+                resultBox.classList.remove('hidden');
+                resultBox.innerHTML = `✓ Engineers active near <strong>${postcode.toUpperCase()}</strong>! Average response: 45 mins.`;
+            }
+        }
+
+        // Select Service and Redirect to Contact Form
+        function selectServiceAndRedirect(serviceName) {
+            switchTab('contact');
+            const serviceDropdown = document.getElementById('booking-service');
+            if (serviceDropdown) {
+                for (let i = 0; i < serviceDropdown.options.length; i++) {
+                    if (serviceDropdown.options[i].text === serviceName) {
+                        serviceDropdown.selectedIndex = i;
+                        break;
+                    }
+                }
+            }
+        }
+
+        // Booking Form Submission Handler
+        function handleBookingSubmission(e) {
+            e.preventDefault();
+            const form = document.getElementById('booking-form');
+            const successBox = document.getElementById('booking-success');
+            
+            form.style.display = 'none';
+            successBox.classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
